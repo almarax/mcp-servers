@@ -1,29 +1,23 @@
-# openai-server MCP Server
+# azure-openai-server MCP Server
 
-A Model Context Protocol server
-
-This is a TypeScript-based MCP server that implements a simple notes system. It demonstrates core MCP concepts by providing:
-
-- Resources representing text notes with URIs and metadata
-- Tools for creating new notes
-- Prompts for generating summaries of notes
+A Model Context Protocol server for Azure OpenAI API
 
 ## Features
 
-### Resources
-- List and access notes via `note://` URIs
-- Each note has a title, content and metadata
-- Plain text mime type for simple content access
-
 ### Tools
-- `create_note` - Create new text notes
-  - Takes title and content as required parameters
-  - Stores note in server state
+- `chat_completion` - Generate text using Azure OpenAI's chat completion API
+  - Takes prompt and optional model name as parameters
+  - Returns generated text response
 
-### Prompts
-- `summarize_notes` - Generate a summary of all stored notes
-  - Includes all note contents as embedded resources
-  - Returns structured prompt for LLM summarization
+## Setup
+
+### Environment Variables
+Create a `.env` file with your Azure OpenAI credentials:
+```bash
+AZURE_OPENAI_API_KEY=your_api_key
+AZURE_OPENAI_ENDPOINT=your_endpoint
+AZURE_OPENAI_DEPLOYMENT_NAME=your_deployment_name
+```
 
 ## Development
 
@@ -52,8 +46,8 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "openai-server": {
-      "command": "/path/to/openai-server/build/index.js"
+    "azure-openai-server": {
+      "command": "/path/to/azure-openai-server/build/index.js"
     }
   }
 }
