@@ -17,9 +17,10 @@
     "inspector": "npx @modelcontextprotocol/inspector build/index.js"
   },
   "dependencies": {
+    "@azure/openai": "^1.0.0-beta.11",
+    "@azure/core-auth": "^1.7.0",
     "@modelcontextprotocol/sdk": "0.6.0",
-    "dotenv": "^16.4.5",
-    "openai": "^4.73.1"
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
