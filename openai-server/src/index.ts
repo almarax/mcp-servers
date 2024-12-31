@@ -7,24 +7,28 @@ import {
   ErrorCode,
   McpError
 } from "@modelcontextprotocol/sdk/types.js";
-import OpenAI from "openai";
+import { AzureKeyCredential } from "@azure/core-auth";
+import { OpenAIClient } from "@azure/openai";
 import dotenv from "dotenv";
 import { isValidChatArgs } from "./types.js";
 
 dotenv.config();
 
-const API_KEY = process.env.OPENAI_API_KEY;
-if (!API_KEY) {
-  throw new Error("OPENAI_API_KEY environment variable is required");
+const API_KEY = process.env.AZURE_OPENAI_API_KEY;
+const ENDPOINT = process.env.AZURE_OPENAI_ENDPOINT;
+const DEPLOYMENT = process.env.AZURE_OPENAI_DEPLOYMENT_NAME;
+
+if (!API_KEY || !ENDPOINT || !DEPLOYMENT) {
+  throw new Error("Azure OpenAI environment variables are required (AZURE_OPENAI_API_KEY, AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_DEPLOYMENT_NAME)");
 }
 
 class OpenAIServer {
   private server: Server;
-  private openai: OpenAI;
+  private client: OpenAIClient;
 
   constructor() {
     this.server = new Server({
-      name: "openai-server",
+      name: "azure-openai-server",
       version: "0.1.0"
     }, {
       capabilities: {
@@ -32,9 +36,10 @@ class OpenAIServer {
       }
     });
 
-    this.openai = new OpenAI({
-      apiKey: API_KEY
-    });
+    this.client = new OpenAIClient(
+      ENDPOINT,
+      new AzureKeyCredential(API_KEY)
+    );
 
     this.setupHandlers();
     this.setupErrorHandling();
@@ -57,7 +62,7 @@ class OpenAIServer {
       async () => ({
         tools: [{
           name: "chat_completion",
-          description: "Generate text using OpenAI's chat completion API",
+          description: "Generate text using Azure OpenAI's chat completion API",
           inputSchema: {
             type: "object",
             properties: {
@@ -95,15 +100,16 @@ class OpenAIServer {
         }
 
         try {
-          const completion = await this.openai.chat.completions.create({
-            model: request.params.arguments.model || "o1-preview",
-            messages: [
-              { 
-                role: "user", 
-                content: request.params.arguments.prompt 
-              }
-            ]
-          });
+          const completion = await this.client.getChatCompletions(
+            DEPLOYMENT,
+            [{ 
+              role: "user", 
+              content: request.params.arguments.prompt 
+            }],
+            {
+              model: request.params.arguments.model || "o1-preview"
+            }
+          );
 
           return {
             content: [
@@ -118,7 +124,7 @@ class OpenAIServer {
             content: [
               {
                 type: "text",
-                text: `OpenAI API error: ${error instanceof Error ? error.message : String(error)}`
+                text: `Azure OpenAI API error: ${error instanceof Error ? error.message : String(error)}`
               }
             ],
             isError: true
@@ -131,7 +137,7 @@ class OpenAIServer {
   async run(): Promise<void> {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error("OpenAI MCP server running on stdio");
+    console.error("Azure OpenAI MCP server running on stdio");
   }
 }
 
