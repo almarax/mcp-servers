@@ -9,10 +9,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import { AzureKeyCredential } from "@azure/core-auth";
 import { OpenAIClient } from "@azure/openai";
-import dotenv from "dotenv";
 import { isValidChatArgs } from "./types.js";
-
-dotenv.config();
 
 const API_KEY = process.env.AZURE_OPENAI_API_KEY;
 const ENDPOINT = process.env.AZURE_OPENAI_ENDPOINT;
