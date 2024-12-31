@@ -9,16 +9,6 @@ A Model Context Protocol server for Azure OpenAI API
   - Takes prompt and optional model name as parameters
   - Returns generated text response
 
-## Setup
-
-### Environment Variables
-Create a `.env` file with your Azure OpenAI credentials:
-```bash
-AZURE_OPENAI_API_KEY=your_api_key
-AZURE_OPENAI_ENDPOINT=your_endpoint
-AZURE_OPENAI_DEPLOYMENT_NAME=your_deployment_name
-```
-
 ## Development
 
 Install dependencies:
@@ -47,7 +37,13 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 {
   "mcpServers": {
     "azure-openai-server": {
-      "command": "/path/to/azure-openai-server/build/index.js"
+      "command": "node",
+      "args": ["/path/to/azure-openai-server/build/index.js"],
+      "env": {
+        "AZURE_OPENAI_API_KEY": "your-api-key",
+        "AZURE_OPENAI_ENDPOINT": "https://your-resource.openai.azure.com",
+        "AZURE_OPENAI_DEPLOYMENT_NAME": "your-deployment-name"
+      }
     }
   }
 }
