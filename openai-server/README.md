@@ -40,9 +40,9 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
       "command": "node",
       "args": ["/path/to/azure-openai-server/build/index.js"],
       "env": {
-        "AZURE_OPENAI_API_KEY": "your-api-key",
-        "AZURE_OPENAI_ENDPOINT": "https://your-resource.openai.azure.com",
-        "AZURE_OPENAI_DEPLOYMENT_NAME": "your-deployment-name"
+        "AZURE_OPENAI_API_KEY": "your_api_key",
+        "AZURE_OPENAI_ENDPOINT": "your_endpoint",
+        "AZURE_OPENAI_DEPLOYMENT_NAME": "your_deployment_name"
       }
     }
   }
